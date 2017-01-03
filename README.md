@@ -123,6 +123,15 @@ Rails.application.routes.draw do
 end
 ```
 
+Add `:verify_authenticity_token` to `application_controller.rb`:
+```ruby
+class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token
+end
+
+```
+
 Rename `application.css` to `application.scss` in `app/assets/stylesheets` and add this line:
 ```
 @import "bootstrap";
@@ -157,7 +166,152 @@ Update `app/views/layouts/application.html.erb`:
     </div>
   </body>
 </html>
+```
 
+Run Rails 5 API app on port `3003`:
+```
+rails s -b 0.0.0.0 -p 3003
 ```
 
 ## Create React App use `create-react-app`
+To install `create-react-app`, please read at https://facebook.github.io/react/blog/2016/07/22/create-apps-with-no-configuration.html
+
+Create simple React App:
+```
+create-react-app media_client
+```
+
+Install packages:
+```
+npm i react-dropzone react-redux redux redux-form axios rc-progress node-uuid bootstrap jquery --save
+```
+
+Add jquery and bootstrap to `index.js`:
+```
+import 'bootstrap/dist/css/bootstrap.css';
+import jquery from 'jquery';
+window.$ = window.jQuery=jquery;
+require('bootstrap/dist/js/bootstrap');
+```
+
+Add Upload components in `src/components`:
+```javascript
+import React, { Component } from 'react';
+import Dropzone from 'react-dropzone';
+import { Field, reduxForm } from 'redux-form';
+import { post } from 'axios';
+import { Line, Circle } from 'rc-progress';
+import { v4 } from 'node-uuid';
+
+class Upload extends Component {
+  constructor(props) {
+    super(props);
+    this.onDrop = this.onDrop.bind(this);
+    this.onOpenClick = this.onOpenClick.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.state = {
+      files: [],
+      percentCompleted: 0
+    }
+  }
+
+  onFormSubmit(data) {
+    const url = '/upload';
+    let formData = new FormData();
+    formData.append('name', data.name)
+    formData.append('description', data.description)
+    formData.append('picture', data.picture)
+    console.log("formData", formData);
+    const config = {
+        headers: { 'content-type': 'multipart/form-data' },
+        onUploadProgress: function(progressEvent) {
+          var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+          this.setState({ percentCompleted: percentCompleted });
+        }.bind(this)
+    }
+
+    post(url, formData, config)
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+  }
+
+  onDrop(acceptedFiles) {
+    this.setState({
+      files: acceptedFiles
+    });
+    console.log("onDrop", this.state.files);
+
+    acceptedFiles.forEach((file)=> {
+      const data = {
+        name: "dora1",
+        description: "dora1 description",
+        picture: file
+      }
+      console.log("file", JSON.stringify(data));
+
+      this.onFormSubmit(data);
+    });
+
+  }
+
+  onOpenClick() {
+    this.dropzone.open();
+    console.log("onOpenClick", this.state.files);
+  }
+
+  renderThumb(file, idx) {
+    return (
+      <div className="col-md-2" key={ v4() }>
+        <img key={ v4() } src={file.preview} className="img-thumbnail" />
+      </div>
+    )
+  }
+
+  render() {
+    const progress = this.state.percentCompleted;
+    return (
+      <div className="col-md-12">
+        <div className="row">
+          <Dropzone ref={(node) => { this.dropzone = node; }} onDrop={this.onDrop}>
+              <div>Try dropping some files here, or click to select files to upload.</div>
+          </Dropzone>
+          <div className="pull-left">
+            <br />
+            <button type="button" className="btn" onClick={this.onOpenClick}>
+              Open files
+            </button>
+          </div>
+        </div>
+        <div className="row">
+          <p>{progress} %</p>
+          <Line percent={progress} strokeWidth="4" strokeColor="#00ff00" />
+          {/* <Circle percent={progress} strokeWidth="4" strokeColor="#D3D3D3" /> */}
+        </div>
+
+        {this.state.files.length > 0 ? <div>
+        <h2>Uploading {this.state.files.length} files...</h2>
+        <div className="row">
+          {this.state.files.map((file, idx) => this.renderThumb(file, idx) )}
+        </div>
+        </div> : null}
+      </div>
+    )
+  }
+}
+
+export default Upload
+```
+
+Add proxy in `package.json` point to rails api:
+```
+"proxy": "http://localhost:3003",
+```
+
+Run React app:
+```
+yarn start
+```
