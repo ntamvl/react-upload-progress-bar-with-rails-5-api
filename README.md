@@ -35,6 +35,11 @@ Install the gems:
 bundle install
 ```
 
+Go to the application configuration file and add the configurations for CORS:
+```ruby
+
+```
+
 Generate model view controller `Item`:
 ```
 rails g scaffold Item name:string description:string
