@@ -73,13 +73,28 @@ class Upload extends Component {
     )
   }
 
+  renderThumbPreview() {
+    if (this.state.files.length > 0) {
+      const file = this.state.files[0];
+      return (
+        <div>
+          <img key={ v4() } src={file.preview} className="img-thumbnail" width="200" />
+        </div>
+      )
+    } else {
+      return (
+        <div>Try dropping some files here, or click to select files to upload.</div>
+      )
+    }
+  }
+
   render() {
     const progress = this.state.percentCompleted;
     return (
       <div className="col-md-12">
         <div className="row">
           <Dropzone ref={(node) => { this.dropzone = node; }} onDrop={this.onDrop}>
-              <div>Try dropping some files here, or click to select files to upload.</div>
+              { this.renderThumbPreview() }
           </Dropzone>
           <div className="pull-left">
             <br />
