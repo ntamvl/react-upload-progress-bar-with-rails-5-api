@@ -1,7 +1,7 @@
 # Example React upload progress bar with Rails 5 API
 ## Content
-- Create simple RAILS 5 API
-- Create React APP use create-react-app
+- Create simple Rails 5 API
+- Create React app use create-react-app
 
 ## Screenshot
 ![Example React upload progress bar with Rails 5 API](https://raw.githubusercontent.com/ntamvl/react-upload-progress-bar-with-rails-5-api/master/screenshot.png)
