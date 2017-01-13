@@ -40,7 +40,13 @@ bundle install
 
 Go to the application configuration file and add the configurations for CORS:
 ```ruby
-
+# config/application.rb
+config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins '*'
+    resource '*', :headers => :any, :methods => [:get, :post, :options]
+  end
+end
 ```
 
 Generate model view controller `Item`:
