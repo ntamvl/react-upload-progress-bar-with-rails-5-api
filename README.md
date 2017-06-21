@@ -26,6 +26,10 @@ cd && cd react-upload-progress-bar-with-rails-5-api/media_client
 yarn start
 ```
 
+
+# Let's go step by step
+-----------------------
+
 ## Create simple Rails 5 API
 Setup new rails 5 project:
 ```
