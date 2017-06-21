@@ -15,6 +15,7 @@ cd && cd react-upload-progress-bar-with-rails-5-api/media_client && yarn install
 ```
 
 **Run API:**
+
 Edit `config/database.yml` before run this commands.
 
 ```
