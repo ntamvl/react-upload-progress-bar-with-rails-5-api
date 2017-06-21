@@ -6,6 +6,26 @@
 ## Screenshot
 ![Example React upload progress bar with Rails 5 API](https://raw.githubusercontent.com/ntamvl/react-upload-progress-bar-with-rails-5-api/master/screenshot.png)
 
+## How to run
+**Install dependencies:**
+```
+cd && git clone https://github.com/ntamvl/react-upload-progress-bar-with-rails-5-api.git
+cd && cd react-upload-progress-bar-with-rails-5-api/media_api && bundle install
+cd && cd react-upload-progress-bar-with-rails-5-api/media_client && yarn install
+```
+
+**Run API:**
+```
+cd && cd react-upload-progress-bar-with-rails-5-api/media_api
+rails s -b 0.0.0.0 -p 3003
+```
+
+**Run Client:**
+```
+cd && cd react-upload-progress-bar-with-rails-5-api/media_client
+yarn start
+```
+
 ## Create simple Rails 5 API
 Setup new rails 5 project:
 ```
